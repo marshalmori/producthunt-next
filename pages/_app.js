@@ -3,7 +3,9 @@ import "@/styles/app.css";
 import App from "next/app";
 import firebase, { FirebaseContext } from "../firebase";
 
-export default function MyApp({ Component, pageProps }) {
+const MyApp = (props) => {
+  const { Component, pageProps } = props;
+
   return (
     <FirebaseContext.Provider
       value={{
@@ -13,4 +15,6 @@ export default function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
     </FirebaseContext.Provider>
   );
-}
+};
+
+export default MyApp;
