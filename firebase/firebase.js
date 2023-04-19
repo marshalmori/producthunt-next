@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   getAuth,
   updateProfile,
 } from "@firebase/auth";
@@ -24,6 +25,11 @@ class Firebase {
     return await updateProfile(this.auth.currentUser, {
       displayName: nombre,
     });
+  }
+
+  // Inicia sesión del usuario
+  async login(email, password) {
+    return signInWithEmailAndPassword(this.auth, email, password);
   }
 }
 
