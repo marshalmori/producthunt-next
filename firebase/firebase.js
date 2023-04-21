@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   getAuth,
   updateProfile,
 } from "@firebase/auth";
@@ -30,6 +31,11 @@ class Firebase {
   // Inicia sesión del usuario
   async login(email, password) {
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  // Cierra la sesión del usuario
+  async cerrarSesion() {
+    await signOut(this.auth);
   }
 }
 

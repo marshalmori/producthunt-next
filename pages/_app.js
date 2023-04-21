@@ -13,6 +13,7 @@ const MyApp = (props) => {
     <FirebaseContext.Provider
       value={{
         firebase,
+        usuario,
       }}
     >
       <Component {...pageProps} />
