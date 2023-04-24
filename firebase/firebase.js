@@ -7,12 +7,14 @@ import {
   getAuth,
   updateProfile,
 } from "@firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import firebaseConfig from "./config";
 
 class Firebase {
   constructor() {
     const app = initializeApp(firebaseConfig);
     this.auth = getAuth(app);
+    this.db = getFirestore(app);
   }
 
   //Registra un usuario
@@ -41,23 +43,3 @@ class Firebase {
 
 const firebase = new Firebase();
 export default firebase;
-
-// const firebase = async ({ nombre, email, password }) => {
-//   const app = initializeApp(firebaseConfig);
-//   const auth = getAuth(app);
-
-//   try {
-//     const createdUser = await createUserWithEmailAndPassword(
-//       auth,
-//       email,
-//       password
-//     );
-//     console.log(createdUser);
-//     return await createdUser.user.updateProfile.displayName({
-//       displayName: nombre,
-//     });
-//   } catch (error) {
-//     console.log(error.code);
-//     console.log(error.message);
-//   }
-// };
