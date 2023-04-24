@@ -8,6 +8,7 @@ import {
   updateProfile,
 } from "@firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "@firebase/storage";
 import firebaseConfig from "./config";
 
 class Firebase {
@@ -15,6 +16,7 @@ class Firebase {
     const app = initializeApp(firebaseConfig);
     this.auth = getAuth(app);
     this.db = getFirestore(app);
+    this.storage = getStorage(app);
   }
 
   //Registra un usuario
