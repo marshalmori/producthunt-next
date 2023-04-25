@@ -31,7 +31,7 @@ const Producto = () => {
   } = router;
 
   // context de firebase
-  const { firebase } = useContext(FirebaseContext);
+  const { firebase, usuario } = useContext(FirebaseContext);
 
   useEffect(() => {
     console.log(id);
@@ -94,13 +94,17 @@ const Producto = () => {
               <img src={urlimagen} />
               <p>{descripcion}</p>
 
-              <h2>Agrega tu comentario</h2>
-              <form>
-                <Campo>
-                  <input type="text" name="mensaje" />
-                </Campo>
-                <InputSubmit type="submit" value="Agregar Comentario" />
-              </form>
+              {usuario && (
+                <Fragment>
+                  <h2>Agrega tu comentario</h2>
+                  <form>
+                    <Campo>
+                      <input type="text" name="mensaje" />
+                    </Campo>
+                    <InputSubmit type="submit" value="Agregar Comentario" />
+                  </form>
+                </Fragment>
+              )}
 
               <h2
                 css={css`
@@ -134,7 +138,7 @@ const Producto = () => {
                   {votos} Votos
                 </p>
 
-                <Boton>Votar</Boton>
+                {usuario && <Boton>Votar</Boton>}
               </div>
             </aside>
           </ContenedorProducto>
