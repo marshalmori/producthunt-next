@@ -65,6 +65,7 @@ const Producto = () => {
     url,
     URLImage: urlimagen,
     votos,
+    creador,
   } = producto;
 
   return (
@@ -85,7 +86,10 @@ const Producto = () => {
             <div>
               <p>
                 Publicado hace:{" "}
-                {formatDistanceToNow(new Date(creado), { locale: es })}
+                {creado ? formatDistanceToNow(new Date(creado)) : null}
+              </p>
+              <p>
+                Por: {creador?.nombre} de {empresa}
               </p>
               <img src={urlimagen} />
               <p>{descripcion}</p>
@@ -105,8 +109,8 @@ const Producto = () => {
               >
                 Comentarios
               </h2>
-              {comentarios.map((comentario) => (
-                <li>
+              {comentarios?.map((comentario) => (
+                <li key={comentario.id}>
                   <p>{comentario.nombre}</p>
                   <p>Escrito por: {comentario.usuarioNombre}</p>
                 </li>
@@ -116,6 +120,7 @@ const Producto = () => {
               <Boton target="_blank" bgColor="true" href={url}>
                 Visitar URL
               </Boton>
+
               <div
                 css={css`
                   margin-top: 5rem;
