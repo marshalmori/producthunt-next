@@ -101,6 +101,7 @@ export default function NuevoProducto() {
         id: usuario.uid,
         nombre: usuario.displayName,
       },
+      haVotado: [],
     };
 
     // insertarlo en la base de datos
@@ -137,7 +138,7 @@ export default function NuevoProducto() {
                   <input
                     type="text"
                     id="nombre"
-                    placeholder="Tu Nombre"
+                    placeholder="Nombre producto"
                     name="nombre"
                     value={nombre}
                     onChange={handleChange}

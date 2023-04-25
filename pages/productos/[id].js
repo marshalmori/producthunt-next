@@ -29,6 +29,7 @@ const Producto = () => {
   // state del componente
   const [producto, setProducto] = useState({});
   const [error, setError] = useState(false);
+  const [comentario, guardarComentario] = useState({});
 
   // Routing para obtener el id actual
   const router = useRouter();
@@ -58,7 +59,7 @@ const Producto = () => {
       };
       obtenerProducto();
     }
-  }, [id]);
+  }, [id, producto]);
 
   //   if (Object.keys(producto).length === 0) return "Cargando...";
 
@@ -72,6 +73,7 @@ const Producto = () => {
     URLImage: urlimagen,
     votos,
     creador,
+    haVotado,
   } = producto;
 
   const votarProducto = () => {
@@ -82,16 +84,58 @@ const Producto = () => {
     //obtener y sumar un nuevo voto
     const nuevoTotal = votos + 1;
 
+    // Verificar si el usuario actual ha votado
+    if (haVotado.includes(usuario.uid)) return;
+
+    // guardar el ID del usuario que ha votado
+    const nuevoHaVotado = [...haVotado, usuario.uid];
+
     // Actualizar en la BD
     const docRef = doc(collection(firebase.db, "productos"), id);
     updateDoc(docRef, {
       votos: increment(nuevoTotal),
+      haVotado: nuevoHaVotado,
     });
 
     // Actualizar el state
     setProducto({
       ...producto,
       votos: nuevoTotal,
+    });
+  };
+
+  // Funciones para crear comentarios
+  const comentarioChange = (e) => {
+    guardarComentario({
+      ...comentario,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const agregarComentario = (e) => {
+    e.preventDefault();
+
+    if (!usuario) {
+      return router.push("/login");
+    }
+
+    // información extra al comentario
+    comentario.usuarioId = usuario.uid;
+    comentario.usuarioNombre = usuario.displayName;
+
+    // Tomar copia de comentarios y agregarlos al arreglo
+    const nuevosComentarios = [...comentarios, comentario];
+
+    // Actualizar la BD
+    const docRef = doc(collection(firebase.db, "productos"), id);
+    updateDoc(docRef, {
+      comentarios: nuevosComentarios,
+    });
+
+    // Actualizar el state
+    setProducto({
+      ...producto,
+      comentarios: nuevosComentarios,
     });
   };
 
@@ -124,9 +168,13 @@ const Producto = () => {
               {usuario && (
                 <Fragment>
                   <h2>Agrega tu comentario</h2>
-                  <form>
+                  <form onSubmit={agregarComentario}>
                     <Campo>
-                      <input type="text" name="mensaje" />
+                      <input
+                        type="text"
+                        name="mensaje"
+                        onChange={comentarioChange}
+                      />
                     </Campo>
                     <InputSubmit type="submit" value="Agregar Comentario" />
                   </form>
@@ -140,12 +188,35 @@ const Producto = () => {
               >
                 Comentarios
               </h2>
-              {comentarios?.map((comentario) => (
-                <li key={comentario.id}>
-                  <p>{comentario.nombre}</p>
-                  <p>Escrito por: {comentario.usuarioNombre}</p>
-                </li>
-              ))}
+
+              {comentarios?.length === 0 ? (
+                "Aún no hay comentarios"
+              ) : (
+                <ul>
+                  {comentarios?.map((comentario, idx) => (
+                    <li
+                      key={`${comentario.usuarioId}-${idx}`}
+                      css={css`
+                        border: 1px solid #e1e1e1;
+                        padding: 2rem;
+                      `}
+                    >
+                      <p>{comentario.mensaje}</p>
+                      <p>
+                        Escrito por:{" "}
+                        <span
+                          css={css`
+                            font-weight: bold;
+                          `}
+                        >
+                          {" "}
+                          {comentario.usuarioNombre}
+                        </span>
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <aside>
               <Boton target="_blank" bgColor="true" href={url}>
