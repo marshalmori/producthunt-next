@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { es } from "date-fns/locale";
 import { Campo, InputSubmit } from "@/components/ui/Fomulario";
+import Boton from "@/components/ui/Boton";
 
 const ContenedorProducto = styled.div`
   @media (min-width: 768px) {
@@ -111,7 +112,26 @@ const Producto = () => {
                 </li>
               ))}
             </div>
-            <aside>2</aside>
+            <aside>
+              <Boton target="_blank" bgColor="true" href={url}>
+                Visitar URL
+              </Boton>
+              <div
+                css={css`
+                  margin-top: 5rem;
+                `}
+              >
+                <p
+                  css={css`
+                    text-align: center;
+                  `}
+                >
+                  {votos} Votos
+                </p>
+
+                <Boton>Votar</Boton>
+              </div>
+            </aside>
           </ContenedorProducto>
         </div>
       </Fragment>
