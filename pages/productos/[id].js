@@ -1,7 +1,13 @@
 import { useEffect, useContext, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import { FirebaseContext } from "@/firebase";
-import { collection, getDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import Layout from "../../components/layout/Layout";
 import Error404 from "@/components/layout/404";
 import { css } from "@emotion/react";
@@ -67,6 +73,27 @@ const Producto = () => {
     votos,
     creador,
   } = producto;
+
+  const votarProducto = () => {
+    if (!usuario) {
+      return router.push("/login");
+    }
+
+    //obtener y sumar un nuevo voto
+    const nuevoTotal = votos + 1;
+
+    // Actualizar en la BD
+    const docRef = doc(collection(firebase.db, "productos"), id);
+    updateDoc(docRef, {
+      votos: increment(nuevoTotal),
+    });
+
+    // Actualizar el state
+    setProducto({
+      ...producto,
+      votos: nuevoTotal,
+    });
+  };
 
   return (
     <Layout>
@@ -138,7 +165,7 @@ const Producto = () => {
                   {votos} Votos
                 </p>
 
-                {usuario && <Boton>Votar</Boton>}
+                {usuario && <Boton onClick={votarProducto}>Votar</Boton>}
               </div>
             </aside>
           </ContenedorProducto>
